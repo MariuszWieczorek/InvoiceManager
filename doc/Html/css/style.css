@@ -1,0 +1,19 @@
+﻿div {
+    font-size: 24px;
+}
+
+.title_one {
+    text-align: right;
+}
+
+#save {
+    font-size: 40px;
+}
+
+ul.two {
+    font-weight: bold;
+}
+
+ul.one li.li_one {
+    font-weight: bold;
+}

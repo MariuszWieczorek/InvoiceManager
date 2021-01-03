@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30804.86
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InvoiceManager", "InvoiceManager.csproj", "{1133778E-5EB4-4F95-8A5A-CBB00AAD476B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1133778E-5EB4-4F95-8A5A-CBB00AAD476B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1133778E-5EB4-4F95-8A5A-CBB00AAD476B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1133778E-5EB4-4F95-8A5A-CBB00AAD476B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1133778E-5EB4-4F95-8A5A-CBB00AAD476B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FD930E3A-AF95-41D0-AFCD-B7FE33A5323F}
+	EndGlobalSection
+EndGlobal
