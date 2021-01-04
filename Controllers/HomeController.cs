@@ -17,7 +17,9 @@ namespace InvoiceManager.Controllers
         {
             ViewBag.Message = "Your application description page.";
 
-            return View();
+            var tekst = "121212 1212121 1212121";
+
+            return View((object)tekst);
         }
 
         public ActionResult Contact()
