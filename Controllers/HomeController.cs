@@ -6,6 +6,7 @@ using System.Web.Mvc;
 
 namespace InvoiceManager.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         public ActionResult Index()
@@ -13,15 +14,14 @@ namespace InvoiceManager.Controllers
             return View();
         }
 
+        [AllowAnonymous]
         public ActionResult About()
         {
             ViewBag.Message = "Your application description page.";
-
-            var tekst = "121212 1212121 1212121";
-
-            return View((object)tekst);
+            return View();
         }
-
+        
+        [AllowAnonymous]
         public ActionResult Contact()
         {
             ViewBag.Message = "Your contact page.";
