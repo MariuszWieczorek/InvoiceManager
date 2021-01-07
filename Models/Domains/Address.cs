@@ -12,15 +12,18 @@ namespace InvoiceManager.Models.Domains
             ApplicationUsers = new Collection<ApplicationUser>();
         }
 
-
         public int Id { get; set; }
         [Required]
+        [Display(Name = "Ulica")]
         public string Street { get; set; }
         [Required]
+        [Display(Name = "Numer Domu")]
         public string Number { get; set; }
         [Required]
+        [Display(Name = "Miasto")]
         public string City { get; set; }
-        [Required] 
+        [Required]
+        [Display(Name = "Kod Pocztowy")]
         public string PostalCode { get; set; }
 
         public ICollection<Client> Clients { get; set; }
