@@ -1,1 +1,29 @@
-﻿
+﻿@model IEnumerable<InvoiceManager.Models.Domains.InvoicePossition>
+
+<div class="row">
+    <h2>Pozycje Faktury</h2>
+    <table class="table table-hover table-striped mt-3 mb-5">
+        <thead>
+            <tr>
+                <th scope="col">lp</th>
+                <th scope="col">Produkt</th>
+                <th scope="col">Ilość</th>
+                <th scope="col">Wartość</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (position in Model)
+            {
+            <tr>
+                
+                <td><a href="@Url.Action("Invoice","Home", new { id = position.Id })">@invoice.Title</a></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            }
+
+        </tbody>
+    </table>
+</div>

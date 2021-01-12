@@ -32,13 +32,13 @@
                 @Html.HiddenFor(x => x.Invoice.ClientId)
                 @Html.HiddenFor(x => x.Invoice.CreatedDate)
 
-                <div class="form-group">
+                <div class="form-group mb-3">
                     @Html.LabelFor(x => x.Invoice.Title)
                     @Html.TextBoxFor(x => x.Invoice.Title,
                    new { @class = "form-control", autofocus = "autofocus" })
                 </div>
 
-                <div class="form-group">
+                <div class="form-group mb-3">
                     @Html.LabelFor(x => x.Invoice.ClientId)
                     @Html.DropDownListFor(x => x.Invoice.ClientId,
                    new SelectList(Model.Clients, "Id", "Name"),
@@ -48,14 +48,14 @@
 
                 if (Model.Invoice.Id != 0)
                 {
-                    <div class="form-group">
+                    <div class="form-group mb-3">
                         @Html.LabelFor(x => x.Invoice.Value)
                         @Html.TextBoxFor(x => x.Invoice.Value,
                        new { @class = "form-control", @readonly = "readonly" })
                     </div>
                 }
 
-                <div class="form-group">
+                <div class="form-group mb-3">
                     @Html.LabelFor(x => x.Invoice.MethodOfPaymentId)
                     @Html.DropDownListFor(x => x.Invoice.MethodOfPaymentId,
                    new SelectList(Model.MethodOfPayments, "Id", "Name"),
@@ -63,14 +63,17 @@
                    new { @class = "form-control" })
                 </div>
 
-                <div class="form-group">
+                <div class="form-group mb-3">
                     @Html.LabelFor(x => x.Invoice.PaymentDate)
                     @Html.TextBoxFor(x => x.Invoice.PaymentDate,
                    "{0:dd-MM-yyyy}",
-                   new { @class = "form-control" })
+                   new { 
+                       @class = "form-control",
+                       @id = "PaymentDate",
+                       autocomplete = "off"})
                 </div>
 
-                <div class="form-group">
+                <div class="form-group mb-3">
                     @Html.LabelFor(x => x.Invoice.Comments)
                     @Html.TextAreaFor(x => x.Invoice.Comments,
                    new { @class = "form-control"})
@@ -99,5 +102,17 @@
         function generatePdf() {
 
         }
+
+        $(document).ready(function () {
+            $('#PaymentDate').datepicker({
+                format: "dd-mm-yyyy",
+                language: "pl",
+                multidate: false,
+                autoclose: true,
+                todayHighLight: true,
+                forceParse: false
+            })
+        });
+
     </script>
 }

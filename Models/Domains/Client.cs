@@ -11,6 +11,7 @@ namespace InvoiceManager.Models.Domains
         {
             Invoices = new Collection<Invoice>();
         }
+        
         public int Id { get; set; }
         [Required]
         public string Name { get; set; }
