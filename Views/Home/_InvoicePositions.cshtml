@@ -11,6 +11,11 @@
             <div>
                 @position.Id
             </div>
+
+
+            <div>
+                @position.Invoice.Id
+            </div>
         }
     </div>
 
@@ -40,7 +45,9 @@
 
                         <td>
                             <a class="font-weight-bold"
-                               href='window.location.href = "@Url.Action("InvoicePossition", "Home", new { invoiceId = position.Invoice.Id, invoicePositionId = position.Id } )"'
+                               href="@Url.Action("InvoicePosition", "Home",
+                                                            new { invoiceId = position.InvoiceId, 
+                                                                invoicePositionId = position.Id } )"
                             >
                                 @position.Lp
                             </a>

@@ -42,7 +42,7 @@ namespace InvoiceManager.Controllers
         public ActionResult Invoice(int id = 0)
         {
 
-            var vm = new EditInvoiceViewModel();
+           EditInvoiceViewModel vm = null;
 
             if(id == 0)
             {
@@ -95,7 +95,8 @@ namespace InvoiceManager.Controllers
                                 Lp = 1,
                                 Product = new Product{Id = 1,Name = "toster"},
                                 Quantity = 2,
-                                Value = 20
+                                Value = 20,
+                                Invoice = new Invoice {Id = 1}
                             },
                             new InvoicePossition
                             {
@@ -103,7 +104,8 @@ namespace InvoiceManager.Controllers
                                 Lp = 2,
                                 Product = new Product{Id = 1,Name = "wiadro"},
                                 Quantity = 15,
-                                Value = 100
+                                Value = 100,
+                                Invoice = new Invoice {Id = 1}
                             }
                         }
                     }
