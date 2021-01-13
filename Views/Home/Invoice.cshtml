@@ -1,7 +1,7 @@
 ﻿@model InvoiceManager.Models.ViewModels.EditInvoiceViewModel
 
 @{
-    ViewBag.Title = "Invoice";
+    ViewBag.Title = Model.Heading;
 }
 
 <h2>Invoice</h2>
@@ -27,6 +27,7 @@
             if (Model.Invoice.Id == 0)
             {
                 <p class="alert alert-info mb-4 mt-4">Pola tytuł, klient, sposób płatności i termin są <strong>wymagane</strong> </p>
+            }
 
                 @Html.HiddenFor(x => x.Invoice.Id)
                 @Html.HiddenFor(x => x.Invoice.ClientId)
@@ -83,13 +84,13 @@
                     Zapisz
                 </button>
 
-            }
+            
 
         }
     </div>
     
     <div class="col-5 offset-1">
-        @if (Model.Invoice.Id != 0)
+        @if(Model.Invoice.Id != 0)
         {
             @Html.Partial("_InvoicePositions",Model.Invoice.InvoicePositions)
         }
