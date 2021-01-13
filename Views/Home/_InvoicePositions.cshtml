@@ -3,23 +3,7 @@
 <div class="row">
     <h2>Pozycje Faktury</h2>
 
-    <div>
-        @Model.Any()
-        @Model.Count()
-        @foreach (var position in Model)
-        {
-            <div>
-                @position.Id
-            </div>
-
-
-            <div>
-                @position.Invoice.Id
-            </div>
-        }
-    </div>
-
-    <table class="table table-hover table-striped mt-3 mb-5">
+        <table class="table table-hover table-striped mt-3 mb-5">
         <thead>
             <tr>
                 <th scope="col">lp</th>
@@ -69,13 +53,3 @@
     </table>
 </div>
 
-@section scripts
-{
-    <script type="text/javascript">
-        function deleteInvoicePosition() {
-            if (!confirm("Czy na pewno chcesz usunąć pozycję faktury ?"))
-                return;
-
-        }
-    </script>
-}

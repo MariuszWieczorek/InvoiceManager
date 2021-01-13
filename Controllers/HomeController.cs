@@ -39,6 +39,25 @@ namespace InvoiceManager.Controllers
             return View(invoices);
         }
 
+        public ActionResult InvoicePosition(int invoiceId = 0, int invoicePosition = 0)
+        {
+            EditInvoicePositionViewModel vm = null;
+            if (invoicePosition == 0) // dodawanie
+            {
+                vm = new EditInvoicePositionViewModel
+                {
+                    Heading = "dodawanie nowej pozycji",
+
+                };
+            }
+            else
+            {
+
+            }
+
+            return View();
+        }
+
         public ActionResult Invoice(int id = 0)
         {
 
@@ -92,6 +111,7 @@ namespace InvoiceManager.Controllers
                             new InvoicePossition
                             {
                                 Id = 1,
+                                InvoiceId = 1,
                                 Lp = 1,
                                 Product = new Product{Id = 1,Name = "toster"},
                                 Quantity = 2,
@@ -101,6 +121,7 @@ namespace InvoiceManager.Controllers
                             new InvoicePossition
                             {
                                 Id = 2,
+                                InvoiceId = 1,
                                 Lp = 2,
                                 Product = new Product{Id = 1,Name = "wiadro"},
                                 Quantity = 15,

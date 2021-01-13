@@ -14,7 +14,7 @@ namespace InvoiceManager.Models.Domains
         [Display(Name = "Wartość")]
         public decimal Value { get; set; }
         [Display(Name = "Produkt")]
-        public int ProductID { get; set; }
+        public int ProductId { get; set; }
         [Display(Name = "Ilosć")]
         public int Quantity { get; set; }
 
