@@ -11,6 +11,31 @@ namespace InvoiceManager.Controllers
     [Authorize]
     public class HomeController : Controller
     {
+        public ActionResult Test()
+        {
+            return View("About");
+        }
+
+
+        public ActionResult Test1()
+        {
+            return PartialView("About");
+        }
+
+
+        public ActionResult Test2()
+        {
+            return RedirectToAction("About","Home");
+        }
+
+
+        public ActionResult Test3()
+        {
+            var js = new Invoice { Id = 1, Title = "FAKTURA", Value = 1500 };
+            return Json(js, JsonRequestBehavior.AllowGet);
+        }
+
+
         public ActionResult Index()
         {
             var invoices = new List<Invoice>
