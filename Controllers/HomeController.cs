@@ -39,25 +39,39 @@ namespace InvoiceManager.Controllers
             return View(invoices);
         }
 
-        public ActionResult InvoicePosition(int invoiceId = 0, int invoicePosition = 0)
+        // dodanie, edycja pozycji faktury
+        public ActionResult InvoicePosition(int invoiceId = 0, int invoicePositionId = 0)
         {
             EditInvoicePositionViewModel vm = null;
-            if (invoicePosition == 0) // dodawanie
+            
+            if (invoicePositionId == 0) // dodawanie
             {
                 vm = new EditInvoicePositionViewModel
                 {
                     Heading = "dodawanie nowej pozycji",
-
+                    InvoicePosition = new InvoicePossition(),
+                    Products = new List<Product> { new Product { Id = 1, Name = "P1"}, new Product {Id = 2, Name = "P2" } }
                 };
             }
             else
             {
+                vm = new EditInvoicePositionViewModel
+                {
+                    Heading = "edycja pozycji faktury",
+                    InvoicePosition = new InvoicePossition()
+                    { 
+                        Id = 1, Lp = 1, Value = 100, Quantity = 2, ProductId = 2
+                    },
 
+                    Products = new List<Product> { new Product { Id = 1, Name = "P1" }, new Product { Id = 2, Name = "P2" } }
+                };
+                
             }
 
-            return View();
+            return View(vm);
         }
 
+        // dodanie, edycja nagłówka faktury
         public ActionResult Invoice(int id = 0)
         {
 
@@ -116,17 +130,15 @@ namespace InvoiceManager.Controllers
                                 Product = new Product{Id = 1,Name = "toster"},
                                 Quantity = 2,
                                 Value = 20,
-                                Invoice = new Invoice {Id = 1}
                             },
                             new InvoicePossition
                             {
                                 Id = 2,
                                 InvoiceId = 1,
                                 Lp = 2,
-                                Product = new Product{Id = 1,Name = "wiadro"},
+                                Product = new Product{Id = 2,Name = "wiadro"},
                                 Quantity = 15,
                                 Value = 100,
-                                Invoice = new Invoice {Id = 1}
                             }
                         }
                     }

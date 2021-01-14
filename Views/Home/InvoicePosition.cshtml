@@ -5,7 +5,7 @@
     ViewBag.Title = Model.Heading;
 }
 
-<h2>Model.Heading</h2>
+<h2>@Model.Heading</h2>
 
 @using (Html.BeginForm("InvoicePosition", "Home"))
 {
@@ -15,7 +15,7 @@
             Pola: Lp, Produkt, Ilość i Wartość są
             <strong>wymagane</strong>
         </p>
-
+    }
         @Html.HiddenFor(x => x.InvoicePosition.Id)
         @Html.HiddenFor(x => x.InvoicePosition.InvoiceId)
 
@@ -52,5 +52,5 @@
         <button class="btn btn-primary btn-lg" type="submit">
             Zapisz
         </button>
-    }
+    
 }

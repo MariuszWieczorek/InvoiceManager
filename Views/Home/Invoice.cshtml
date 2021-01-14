@@ -4,12 +4,12 @@
     ViewBag.Title = Model.Heading;
 }
 
-<h2>Invoice</h2>
+<h2>@Model.Heading</h2>
 
 @if (Model.Invoice.Id != 0)
 {
     <button class="btn btn-primary mb-3"
-            onclick='window.location.href = "@Url.Action("InvoicePossition","Home",new { invoiceId = Model.Invoice.Id })"'>
+            onclick='window.location.href = "@Url.Action("InvoicePosition","Home",new { invoiceId = Model.Invoice.Id })"'>
         Dodaj pozycję
     </button>
 

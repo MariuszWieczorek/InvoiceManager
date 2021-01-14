@@ -7,13 +7,13 @@ namespace InvoiceManager.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.4.4")]
-    public sealed partial class dodane_pola_wartosc_do_product : IMigrationMetadata
+    public sealed partial class init : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(dodane_pola_wartosc_do_product));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(init));
         
         string IMigrationMetadata.Id
         {
-            get { return "202101061548268_dodane_pola_wartosc_do_product"; }
+            get { return "202101140637216_init"; }
         }
         
         string IMigrationMetadata.Source
