@@ -1,5 +1,7 @@
 ﻿using InvoiceManager.Models.Domains;
+using InvoiceManager.Models.Repositories;
 using InvoiceManager.Models.ViewModels;
+using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,166 +13,162 @@ namespace InvoiceManager.Controllers
     [Authorize]
     public class HomeController : Controller
     {
-        public ActionResult Test()
-        {
-            return View("About");
-        }
 
-
-        public ActionResult Test1()
-        {
-            return PartialView("About");
-        }
-
-
-        public ActionResult Test2()
-        {
-            return RedirectToAction("About","Home");
-        }
-
-
-        public ActionResult Test3()
-        {
-            var js = new Invoice { Id = 1, Title = "FAKTURA", Value = 1500 };
-            return Json(js, JsonRequestBehavior.AllowGet);
-        }
-
+        private InvoiceRepository _invoiceRepository = new InvoiceRepository();
+        private ClientRepository _clientRepository = new ClientRepository();
+        private ProductRepository _productRepository = new ProductRepository();
 
         public ActionResult Index()
         {
-            var invoices = new List<Invoice>
-            {
-                new Invoice
-                {
-                    Id = 1,
-                    Title = "FA/01/2021",
-                    Value = 5320,
-                    CreatedDate = DateTime.Now,
-                    PaymentDate = DateTime.Now,
-                    Client = new Client { Name = "Klient1" }
-                },
 
-                new Invoice
-                {
-                    Id = 2,
-                    Title = "FA/02/2021",
-                    Value = 120,
-                    CreatedDate = DateTime.Now,
-                    PaymentDate = DateTime.Now,
-                    Client = new Client { Name = "Klient2" }
-                }
-            };
-            
+            var userId = User.Identity.GetUserId();
+            var invoices = _invoiceRepository.GetInvoices(userId);
             return View(invoices);
         }
 
-        // dodanie, edycja pozycji faktury
-        public ActionResult InvoicePosition(int invoiceId = 0, int invoicePositionId = 0)
+        #region Invoice Widok faktury oraz zapis
+        
+        public ActionResult Invoice(int id = 0)
         {
-            EditInvoicePositionViewModel vm = null;
-            
-            if (invoicePositionId == 0) // dodawanie
-            {
-                vm = new EditInvoicePositionViewModel
-                {
-                    Heading = "dodawanie nowej pozycji",
-                    InvoicePosition = new InvoicePossition(),
-                    Products = new List<Product> { new Product { Id = 1, Name = "P1"}, new Product {Id = 2, Name = "P2" } }
-                };
-            }
-            else
-            {
-                vm = new EditInvoicePositionViewModel
-                {
-                    Heading = "edycja pozycji faktury",
-                    InvoicePosition = new InvoicePossition()
-                    { 
-                        Id = 1, Lp = 1, Value = 100, Quantity = 2, ProductId = 2
-                    },
+            var userId = User.Identity.GetUserId();
+            var invoice = id == 0 ?
+                GetNewInvoice(userId) :
+                _invoiceRepository.GetInvoice(id, userId);
 
-                    Products = new List<Product> { new Product { Id = 1, Name = "P1" }, new Product { Id = 2, Name = "P2" } }
-                };
-                
-            }
+            var vm = PrepareInvoiceVm(invoice, userId); 
 
             return View(vm);
         }
-
-        // dodanie, edycja nagłówka faktury
-        public ActionResult Invoice(int id = 0)
+        [HttpPost]
+        public ActionResult Invoice(Invoice invoice)
         {
-
-           EditInvoiceViewModel vm = null;
-
-            if(id == 0)
-            {
-                vm = new EditInvoiceViewModel
-                {
-                    Clients = new List<Client>
-                    {
-                        new Client {Id = 1, Name = "Klient1"}
-                    },
-
-                    MethodOfPayments = new List<MethodOfPayment>
-                    {
-                        new MethodOfPayment {Id = 1, Name = "Przelew" }
-                    },
-
-                    Heading = "Edycja Faktury 1",
-                    Invoice = new Invoice()
-                };
-            }
+            var userId = User.Identity.GetUserId();
+            invoice.UserId = userId;
+            if (invoice.Id == 0)
+                _invoiceRepository.Add(invoice);
             else
+                _invoiceRepository.Update(invoice);
+
+            return RedirectToAction("Index");
+        }
+
+        private EditInvoiceViewModel PrepareInvoiceVm(Invoice invoice, string userId)
+        {
+            return new EditInvoiceViewModel
             {
-                vm = new EditInvoiceViewModel
-                {
-                    Clients = new List<Client>
-                    {
-                        new Client { Id = 1, Name = "Klient1" }
-                    },
+                Invoice = invoice,
+                Heading = invoice.Id == 0 ? "Dodawanie Nowej Faktury" : "Edycja",
+                Clients = _clientRepository.GetClients(userId),
+                MethodOfPayments = _invoiceRepository.GetMethodOfPayment()
+            };
+        }
 
-                    MethodOfPayments = new List<MethodOfPayment>
-                    {
-                        new MethodOfPayment { Id = 1, Name = "Przelew" }
-                    },
+        private Invoice GetNewInvoice(string userId)
+        {
+            return new Invoice
+            {
+                UserId = userId,
+                CreatedDate = DateTime.Now,
+                PaymentDate = DateTime.Now.AddDays(7)
+            };
+        }
 
-                    Heading = "Edycja Faktury 1",
-                    Invoice = new Invoice()
-                    {
-                        Id = 1,
-                        ClientId = 1,
-                        Comments = "komentarz 1",
-                        CreatedDate = DateTime.Now,
-                        PaymentDate = DateTime.Now,
-                        MethodOfPaymentId = 1,
-                        Value = 100,
-                        Title = "FA/2021/01",
-                        InvoicePositions = new List<InvoicePossition>()
-                        {
-                            new InvoicePossition
-                            {
-                                Id = 1,
-                                InvoiceId = 1,
-                                Lp = 1,
-                                Product = new Product{Id = 1,Name = "toster"},
-                                Quantity = 2,
-                                Value = 20,
-                            },
-                            new InvoicePossition
-                            {
-                                Id = 2,
-                                InvoiceId = 1,
-                                Lp = 2,
-                                Product = new Product{Id = 2,Name = "wiadro"},
-                                Quantity = 15,
-                                Value = 100,
-                            }
-                        }
-                    }
-                };
+        #endregion
+
+        #region InvoicePossition - wyświetlenie pozycji faktury oraz zapis 
+        public ActionResult InvoicePosition(int invoiceId = 0, int invoicePositionId = 0)
+        {
+            var userId = User.Identity.GetUserId();
+            var invoicePosition = invoicePositionId == 0 ?
+                GetNewInvoicePosition(invoiceId, invoicePositionId) :
+                _invoiceRepository.GetInvoicePosition(invoicePositionId,userId);
+
+
+            var vm = PrepareInvoicePositionVm(invoicePosition);
+            return View(vm);
+        }
+
+        [HttpPost]
+        public ActionResult InvoicePosition(InvoicePossition invoicePosition)
+        {
+            var userId = User.Identity.GetUserId();
+            // zweryfikujemy, czy uzytkownik próbuje zaktualizować swoją fakturę
+            // dodajemy lub aktualizujemy pozycję faktury
+            // wyliczymy wartość pozycji
+            // wyliczymy i zaktualizujemy wrtość faktury
+
+            var product = _productRepository.GetProduct(invoicePosition.ProductId);
+            invoicePosition.Value = product.Value * invoicePosition.Quantity;
+
+            if (invoicePosition.Id == 0)
+                _invoiceRepository.AddPosition(invoicePosition, userId);
+            else
+                _invoiceRepository.UpdatePosition(invoicePosition, userId);
+
+            _invoiceRepository.UpdateInvoiceValue(invoicePosition.InvoiceId, userId);
+
+            return RedirectToAction("Invoice", new { id = invoicePosition.Id });
+        }
+
+        private EditInvoicePositionViewModel PrepareInvoicePositionVm(InvoicePossition invoicePosition)
+        {
+            return new EditInvoicePositionViewModel
+            {
+                InvoicePosition = invoicePosition,
+                Heading = invoicePosition.Id == 0 ?
+                "Dodawanie nowej pozycji" :
+                "Edycja Pozycja",
+                Products = _productRepository.GetProducts()
+            };
+        }
+
+        private InvoicePossition GetNewInvoicePosition(int invoiceId, int invoicePositionId)
+        {
+            return new InvoicePossition
+            {
+                InvoiceId = invoiceId,
+                Id = invoicePositionId
+            };
+        }
+
+        #endregion
+
+        [HttpPost]
+        public ActionResult DeleteInvoice(int invoiceId)
+        {
+            try
+            {
+                var userId = User.Identity.GetUserId();
+                _invoiceRepository.Delete(invoiceId, userId);
             }
+            catch (Exception exception)
+            {
+                // TODO: logowanie do pliku niepowodzenie usunięcia faktury
+                return Json(new { Success = false, Message = exception.Message });
+            }
+             
+            return Json( new { Success = true});
+        }
+
+        [HttpPost]
+        public ActionResult DeleteInvoicePosition(int positionId, int invoiceId)
+        {
+            var invoiceValue = 0m;
             
-            return View(vm); 
+            try
+            {
+                var userId = User.Identity.GetUserId();
+                _invoiceRepository.DeletePosition(invoiceId, userId);
+                // musimy jeszcze zaktualizować wartość faktury
+                invoiceValue = _invoiceRepository.UpdateInvoiceValue(invoiceId, userId);
+            }
+            catch (Exception exception)
+            {
+                // TODO: logowanie do pliku niepowodzenie usunięcia faktury
+                return Json(new { Success = false, Message = exception.Message });
+            }
+
+            return Json(new { Success = true, InvoiceValue = invoiceValue });
         }
 
         [AllowAnonymous]
