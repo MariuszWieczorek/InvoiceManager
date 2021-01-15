@@ -10,9 +10,10 @@ namespace InvoiceManager.Models.Repositories
     {
         public List<Client> GetClients(string userId)
         {
-            // TODO: Do pobrania lista klientów
-            return new List<Client>();
-            
+            using (var context = new ApplicationDbContext())
+            {
+                return context.Clients.Where(x => x.UserId == userId).ToList();
+            }
         }
     }
 }

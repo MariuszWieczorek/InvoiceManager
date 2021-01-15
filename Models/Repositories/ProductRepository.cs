@@ -10,14 +10,21 @@ namespace InvoiceManager.Models.Repositories
     {
         public List<Product> GetProducts()
         {
-            //TODO: Pobieranie Listy produktów z bazy
-            return new List<Product>();
+            using (var context = new ApplicationDbContext())
+            {
+                return context.Products.ToList();
+            }
         }
 
         public Product GetProduct(int productId)
         {
-            // TODO: Pobranie produktu z bazy
-            return new Product(); 
+            using (var context = new ApplicationDbContext())
+            {
+                // może być First, FirstOrDefault
+                // Single jeżeli nie znajdzie lub będzie więcej produktów o danym Id
+                // To w tym miejscu zostanie rzucony wyjątek
+                return context.Products.Single(x => x.Id == productId);
+            }
         }
     }
 }
