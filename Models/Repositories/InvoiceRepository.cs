@@ -169,7 +169,7 @@ namespace InvoiceManager.Models.Repositories
             }
         }
 
-        public void DeletePosition(int invoicePositionId, string userId)
+        public void DeletePosition(int invoicePositionId,int invoiceId, string userId)
         {
             using (var context = new ApplicationDbContext())
             {
@@ -177,6 +177,7 @@ namespace InvoiceManager.Models.Repositories
                     .Include(x => x.Invoice)
                     .Single(x =>
                     x.Id == invoicePositionId &&
+                    x.InvoiceId == invoiceId &&
                     x.Invoice.UserId == userId);
 
                 context.InvoicePossitions.Remove(invoicePositionToDelete);

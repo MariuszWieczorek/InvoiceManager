@@ -115,9 +115,37 @@
         // funkcja wywoływana z widoku częściowego _InvoicePositions
         // Ważne aby była właśnie tytaj, czyli w widoku z którego jest
         // wywoływany widok częściowy
-        function deleteInvoicePosition() {
+        function deleteInvoicePosition(positionId, invoiceId, btn) {
             if (!confirm("Czy na pewno chcesz usunąć pozycję faktury ?"))
                 return;
+
+             $.ajax({
+                type: 'POST',
+                url: "@Url.Action("DeleteInvoicePosition", "Home")",
+                 data: {
+                     positionId: positionId,
+                     invoiceId: invoiceId
+                },
+                success: function (data) {
+                    if (data.Success) {
+                        // usuwanie z tabeli w html'u
+                        var row = btn.parentNode.parentNode;
+                        row.parentNode.removeChild(row);
+
+                        var invoiceVal = data.InvoiceValue;
+                        $('#Invoice_Value').val(data.InvoiceValue.toFixed(2).replace(".", ","));
+                    }
+                    else {
+                        alert(data.Message);
+                    }
+                },
+                error: function (data) {
+                        alert(data.Message);
+                },
+                dataType: 'json'
+
+                });
+            // --------------------------------------------
         }
 
         $(document).ready(function () {

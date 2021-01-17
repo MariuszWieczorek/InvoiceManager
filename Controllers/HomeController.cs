@@ -139,7 +139,7 @@ namespace InvoiceManager.Controllers
             try
             {
                 var userId = User.Identity.GetUserId();
-                _invoiceRepository.DeletePosition(invoiceId, userId);
+                _invoiceRepository.DeletePosition(positionId,invoiceId, userId);
                 // musimy jeszcze zaktualizować wartość faktury
                 invoiceValue = _invoiceRepository.UpdateInvoiceValue(invoiceId, userId);
             }
