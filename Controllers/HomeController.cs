@@ -46,7 +46,7 @@ namespace InvoiceManager.Controllers
             var userId = User.Identity.GetUserId();
             invoice.UserId = userId;
 
-            System.IO.File.AppendAllText(@"d:\plik.txt",$"{invoice.Title} {invoice.PaymentDate} \n");
+            //System.IO.File.AppendAllText(@"d:\plik.txt",$"{invoice.Title} {invoice.PaymentDate} \n");
 
             if (invoice.Id == 0)
                 _invoiceRepository.Add(invoice);
