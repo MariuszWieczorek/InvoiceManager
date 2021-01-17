@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.IO;
 
 namespace InvoiceManager.Controllers
 {
@@ -26,7 +27,7 @@ namespace InvoiceManager.Controllers
             return View(invoices);
         }
 
-        #region Invoice Widok faktury oraz zapis
+        #region Invoice 
         
         public ActionResult Invoice(int id = 0)
         {
@@ -44,12 +45,32 @@ namespace InvoiceManager.Controllers
         {
             var userId = User.Identity.GetUserId();
             invoice.UserId = userId;
+
+            System.IO.File.AppendAllText(@"d:\plik.txt",$"{invoice.Title} {invoice.PaymentDate} \n");
+
             if (invoice.Id == 0)
                 _invoiceRepository.Add(invoice);
             else
                 _invoiceRepository.Update(invoice);
 
             return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public ActionResult DeleteInvoice(int invoiceId)
+        {
+            try
+            {
+                var userId = User.Identity.GetUserId();
+                _invoiceRepository.Delete(invoiceId, userId);
+            }
+            catch (Exception exception)
+            {
+                // TODO: logowanie do pliku niepowodzenie usunięcia faktury
+                return Json(new { Success = false, Message = exception.Message });
+            }
+
+            return Json(new { Success = true });
         }
 
         private EditInvoiceViewModel PrepareInvoiceVm(Invoice invoice, string userId)
@@ -75,7 +96,7 @@ namespace InvoiceManager.Controllers
 
         #endregion
 
-        #region InvoicePossition - wyświetlenie pozycji faktury oraz zapis 
+        #region InvoicePossition
         public ActionResult InvoicePosition(int invoiceId = 0, int invoicePositionId = 0)
         {
             var userId = User.Identity.GetUserId();
@@ -110,6 +131,27 @@ namespace InvoiceManager.Controllers
             return RedirectToAction("Invoice", new { id = invoicePosition.Id });
         }
 
+        [HttpPost]
+        public ActionResult DeleteInvoicePosition(int positionId, int invoiceId)
+        {
+            var invoiceValue = 0m;
+
+            try
+            {
+                var userId = User.Identity.GetUserId();
+                _invoiceRepository.DeletePosition(invoiceId, userId);
+                // musimy jeszcze zaktualizować wartość faktury
+                invoiceValue = _invoiceRepository.UpdateInvoiceValue(invoiceId, userId);
+            }
+            catch (Exception exception)
+            {
+                // TODO: logowanie do pliku niepowodzenie usunięcia faktury
+                return Json(new { Success = false, Message = exception.Message });
+            }
+
+            return Json(new { Success = true, InvoiceValue = invoiceValue });
+        }
+
         private EditInvoicePositionViewModel PrepareInvoicePositionVm(InvoicePossition invoicePosition)
         {
             return new EditInvoicePositionViewModel
@@ -133,44 +175,7 @@ namespace InvoiceManager.Controllers
 
         #endregion
 
-        [HttpPost]
-        public ActionResult DeleteInvoice(int invoiceId)
-        {
-            try
-            {
-                var userId = User.Identity.GetUserId();
-                _invoiceRepository.Delete(invoiceId, userId);
-            }
-            catch (Exception exception)
-            {
-                // TODO: logowanie do pliku niepowodzenie usunięcia faktury
-                return Json(new { Success = false, Message = exception.Message });
-            }
-             
-            return Json( new { Success = true});
-        }
-
-        [HttpPost]
-        public ActionResult DeleteInvoicePosition(int positionId, int invoiceId)
-        {
-            var invoiceValue = 0m;
-            
-            try
-            {
-                var userId = User.Identity.GetUserId();
-                _invoiceRepository.DeletePosition(invoiceId, userId);
-                // musimy jeszcze zaktualizować wartość faktury
-                invoiceValue = _invoiceRepository.UpdateInvoiceValue(invoiceId, userId);
-            }
-            catch (Exception exception)
-            {
-                // TODO: logowanie do pliku niepowodzenie usunięcia faktury
-                return Json(new { Success = false, Message = exception.Message });
-            }
-
-            return Json(new { Success = true, InvoiceValue = invoiceValue });
-        }
-
+    
         [AllowAnonymous]
         public ActionResult About()
         {

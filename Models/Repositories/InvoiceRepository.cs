@@ -13,6 +13,8 @@ namespace InvoiceManager.Models.Repositories
         {
             using (var context = new ApplicationDbContext())
             {
+                // wyświetlamy w widoku Client.Name dlatego musimy
+                // załączyć również dane o kliencie
                 return context.Invoices.Include(x => x.Client )
                     .Where(x => x.UserId == userId)
                     .ToList();
@@ -23,98 +25,158 @@ namespace InvoiceManager.Models.Repositories
         {
             using (var context = new ApplicationDbContext())
             {
-                return context.Invoices.Single(x => x.Id == id && x.UserId == userId);
+                // chcemy załączyć:
+                // informacje o pozycjach
+                // informacje o Produktach
+                return context.Invoices
+                    .Include(x => x.InvoicePositions)
+                    .Include(x => x.InvoicePositions.Select(y => y.Product))
+                    .Include(x => x.MethodOfPayment)
+                    .Include(x => x.User)
+                    .Include(x => x.User.Address)
+                    .Include(x => x.Client)
+                    .Include(x => x.Client.Address)
+                    .Single(x => x.Id == id && x.UserId == userId);
             }
         }
 
         public List<MethodOfPayment> GetMethodOfPayment()
         {
-            // TODO: Metoda odczytująca z bazy metody płatności
             using (var context = new ApplicationDbContext())
             {
-             
+                return context.MethodOfPayments.ToList(); 
             }
-            return new List<MethodOfPayment>();
         }
 
         public InvoicePossition GetInvoicePosition(int invoicePositionId, string userId)
         {
-            // TODO: Medoda odczytująca z bazy pozycję faktury
             using (var context = new ApplicationDbContext())
             {
-
+                // Sprawdzamy, czy faktura należy od użytkownika
+                return context.InvoicePossitions
+                    .Include(x => x.Product)
+                    .Include(x => x.Invoice)
+                    .Single(x => x.Id == invoicePositionId && x.Invoice.UserId == userId);
             }
-            return new InvoicePossition();
-        }
+         }
 
         public void Update(Invoice invoice)
         {
-            // TODO: obsługa aktualizacji faktury
             using (var context = new ApplicationDbContext())
             {
+                // pobieramy pojedynczy rekord z fakturą do aktualizacji
+                var invoiceToUpdate = context.Invoices
+                    .Single(x => x.Id == invoice.Id && x.UserId == invoice.UserId);
 
+                // dokonujemu zmian  
+                invoiceToUpdate.Client = invoice.Client;
+                invoiceToUpdate.Comments = invoice.Comments;
+                invoiceToUpdate.MethodOfPaymentId = invoice.MethodOfPaymentId;
+                invoiceToUpdate.PaymentDate = invoice.PaymentDate;
+                invoiceToUpdate.Title = invoice.Title;
+
+                // zapisujemy zmiany 
+                context.SaveChanges();
             }
-            throw new NotImplementedException();
         }
 
         public void Add(Invoice invoice)
         {
-            // TODO: obsługa dodania nowej faktury
             using (var context = new ApplicationDbContext())
             {
-
+                invoice.CreatedDate = DateTime.Now;
+                invoice.PaymentDate = DateTime.Now;
+                context.Invoices.Add(invoice);
+                context.SaveChanges();
             }
-            throw new NotImplementedException();
         }
 
         public void AddPosition(InvoicePossition invoicePosition, string userId)
-        {
-            // TODO: obsługa dodania nowej pozycji do faktury
+        {   
+            // na początku musimy się upewnić, czy użytkownik dodaje pozycje do swojej faktury
+            // czyli sprawdzamy czy istnieje faktura o id takim jak id dodawnej pozycji
+            // i czy ta faktura przynależy do użytkownika
             using (var context = new ApplicationDbContext())
             {
+                var invoiceToUpdate = context.Invoices
+                   .Single(x => 
+                   x.Id == invoicePosition.InvoiceId && 
+                   x.UserId == userId );
 
+                // jeżeli nie ma takiego rekordu to zostanie rzucony wyjątek
+
+                context.InvoicePossitions.Add(invoicePosition);
+                context.SaveChanges();
             }
-            throw new NotImplementedException();
         }
 
         public void UpdatePosition(InvoicePossition invoicePosition, string userId)
         {
-            // TODO: obsługa aktualizacji pozycji na faktury
             using (var context = new ApplicationDbContext())
             {
+                // pobieramy pozycje z faktury
+                var invoicePositionToUpdate = context.InvoicePossitions
+                    .Include(x => x.Product)
+                    .Include(x => x.Invoice)
+                    .Single(x =>
+                    x.Id == invoicePosition.Id &&
+                    x.Invoice.UserId == userId);
+
+                invoicePositionToUpdate.Lp = invoicePosition.Lp;
+                invoicePositionToUpdate.ProductId = invoicePosition.ProductId;
+                invoicePositionToUpdate.Quantity = invoicePosition.Quantity;
+                invoicePositionToUpdate.Value = invoicePosition.Quantity * invoicePosition.Product.Value;
+
+                context.SaveChanges();
 
             }
-            throw new NotImplementedException();
         }
 
         public decimal UpdateInvoiceValue(int invoiceId, string userId)
         {
-            // TODO: aktualizacja wartości faktury
             using (var context = new ApplicationDbContext())
             {
+                var invoiceToUpdate = context.Invoices
+                  .Include( x => x.InvoicePositions)  
+                  .Single(x =>
+                  x.Id == invoiceId &&
+                  x.UserId == userId);
 
+                invoiceToUpdate.Value = invoiceToUpdate.InvoicePositions.Sum(x => x.Value);
+
+                context.SaveChanges();
+
+                return invoiceToUpdate.Value;
             }
-            throw new NotImplementedException();
         }
 
         public void Delete(int invoiceId, string userId)
         {
-            // TODO: usunięcie faktury
             using (var context = new ApplicationDbContext())
             {
+                var invoiceToDelete = context.Invoices
+                 .Single(x =>
+                 x.Id == invoiceId &&
+                 x.UserId == userId);
 
+                context.Invoices.Remove(invoiceToDelete);
+                context.SaveChanges();
             }
-            throw new NotImplementedException();
         }
 
-        public void DeletePosition(int invoiceId, string userId)
+        public void DeletePosition(int invoicePositionId, string userId)
         {
-            // TODO: usunięci pozycji faktury
             using (var context = new ApplicationDbContext())
             {
+                var invoicePositionToDelete = context.InvoicePossitions
+                    .Include(x => x.Invoice)
+                    .Single(x =>
+                    x.Id == invoicePositionId &&
+                    x.Invoice.UserId == userId);
 
+                context.InvoicePossitions.Remove(invoicePositionToDelete);
+                context.SaveChanges();
             }
-            throw new NotImplementedException();
         }
     }
 }

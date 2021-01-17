@@ -6,6 +6,10 @@
 
 <h2>@Model.Heading</h2>
 
+<div>
+    @Model.Invoice.PaymentDate
+</div>
+
 @if (Model.Invoice.Id != 0)
 {
     <button class="btn btn-primary mb-3"
@@ -64,14 +68,15 @@
             <div class="form-group mb-3">
                 @Html.LabelFor(x => x.Invoice.PaymentDate)
                 @Html.TextBoxFor(x => x.Invoice.PaymentDate,
-               "{0:dd-MM-yyyy}",
-               new
-                    {
-                   @class = "form-control",
-                   @id = "PaymentDate",
-                   autocomplete = "off"
-                    })
+                 "{0:yyyy-MM-dd}",
+                new
+                {
+                    @class = "form-control",
+                    @id = "PaymentDate",
+                    autocomplete = "off"
+                })
             </div>
+
 
             <div class="form-group mb-3">
                 @Html.LabelFor(x => x.Invoice.Comments)
@@ -117,13 +122,13 @@
 
         $(document).ready(function () {
             $('#PaymentDate').datepicker({
-                format: "dd-mm-yyyy",
+                format: "yyyy-mm-dd",
                 language: "pl",
                 multidate: false,
                 autoclose: true,
-                todayHighLight: true,
+                todayHighlight: true,
                 forceParse: false
-            })
+            });
         });
 
     </script>
