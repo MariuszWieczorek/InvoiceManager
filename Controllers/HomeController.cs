@@ -48,6 +48,11 @@ namespace InvoiceManager.Controllers
 
             //System.IO.File.AppendAllText(@"d:\plik.txt",$"{invoice.Title} {invoice.PaymentDate} \n");
 
+            if (!ModelState.IsValid)
+            {
+
+            } 
+
             if (invoice.Id == 0)
                 _invoiceRepository.Add(invoice);
             else
