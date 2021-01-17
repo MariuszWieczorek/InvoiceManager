@@ -23,6 +23,7 @@ namespace InvoiceManager.Models.Repositories
 
         public Invoice GetInvoice(int id, string userId)
         {
+            //TODO: Tu powinno być ID faktury a nie pozycji
             using (var context = new ApplicationDbContext())
             {
                 // chcemy załączyć:
@@ -122,10 +123,14 @@ namespace InvoiceManager.Models.Repositories
                     x.Id == invoicePosition.Id &&
                     x.Invoice.UserId == userId);
 
+                var productInInvoicePossition = context.Products
+                    .Single(x =>
+                    x.Id == invoicePosition.ProductId);
+
                 invoicePositionToUpdate.Lp = invoicePosition.Lp;
                 invoicePositionToUpdate.ProductId = invoicePosition.ProductId;
                 invoicePositionToUpdate.Quantity = invoicePosition.Quantity;
-                invoicePositionToUpdate.Value = invoicePosition.Quantity * invoicePosition.Product.Value;
+                invoicePositionToUpdate.Value = invoicePosition.Quantity * productInInvoicePossition.Value;
 
                 context.SaveChanges();
 

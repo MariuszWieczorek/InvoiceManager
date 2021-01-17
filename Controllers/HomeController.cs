@@ -128,7 +128,7 @@ namespace InvoiceManager.Controllers
 
             _invoiceRepository.UpdateInvoiceValue(invoicePosition.InvoiceId, userId);
 
-            return RedirectToAction("Invoice", new { id = invoicePosition.Id });
+            return RedirectToAction("Invoice", new { id = invoicePosition.InvoiceId });
         }
 
         [HttpPost]
