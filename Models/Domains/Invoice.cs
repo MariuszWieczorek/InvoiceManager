@@ -16,7 +16,7 @@ namespace InvoiceManager.Models.Domains
             InvoicePositions = new Collection<InvoicePossition>();
         }
         public int Id { get; set; }
-        [Required]
+        [Required(ErrorMessage ="Pole Tytuł jest wymagane !!!")]
         [Display(Name = "Tytuł faktury")]
         public string Title { get; set; }
         [Display(Name = "Wartość")]

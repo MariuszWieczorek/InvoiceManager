@@ -50,7 +50,8 @@ namespace InvoiceManager.Controllers
 
             if (!ModelState.IsValid)
             {
-
+                var vm = PrepareInvoiceVm(invoice, userId);
+                return View("Invoice", vm);
             } 
 
             if (invoice.Id == 0)
@@ -122,6 +123,13 @@ namespace InvoiceManager.Controllers
             // dodajemy lub aktualizujemy pozycję faktury
             // wyliczymy wartość pozycji
             // wyliczymy i zaktualizujemy wrtość faktury
+
+
+            if (!ModelState.IsValid)
+            {
+                var vm = PrepareInvoicePositionVm(invoicePosition);
+                return View("InvoicePosition", vm);
+            }
 
             var product = _productRepository.GetProduct(invoicePosition.ProductId);
             invoicePosition.Value = product.Value * invoicePosition.Quantity;
