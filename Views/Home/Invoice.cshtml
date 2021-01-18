@@ -155,6 +155,12 @@
         }
 
         $(document).ready(function () {
+
+            $.validator.methods.number = function (value, element) {
+                return this.optional(element) || /^-?(?:\d+|{1,3})
+            }
+
+
             $('#PaymentDate').datepicker({
                 format: "yyyy-mm-dd",
                 language: "pl",
