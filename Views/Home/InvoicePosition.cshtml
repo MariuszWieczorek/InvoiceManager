@@ -57,3 +57,21 @@
     </button>
 
 }
+
+
+
+@section scripts
+{
+    <script type="text/javascript">
+        // --------------------------------------------
+
+        $(document).ready(function () {
+
+            // w formatowaniu ma być precinek, a nie kropka
+            $.validator.methods.number = function (value, element) {
+                return this.optional(element) || /^-?(?:\d+|\{1,3}(?:[\s\.,]\d{3})+)(?:[\.,]\d+)?$/.test(value);
+            }
+        });
+
+    </script>
+}
