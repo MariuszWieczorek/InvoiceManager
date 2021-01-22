@@ -4,6 +4,10 @@
     margin-bottom: 20px;
 }
 
+nav, footer{
+    display: none !important;
+}
+
 .invoice-font {
     text-align: center;
     padding-bottom: 15px;

@@ -114,8 +114,34 @@
 
         // Generowanie PDF'a
         function generatePdf() {
+
             if (!confirm("Czy generujemy PDF ?"))
                 return;
+            // --------------------------------------------
+            $.ajax({
+                type: 'POST',
+                url: "@Url.Action("InvoiceToPdf", "Print")",
+                 data: {
+                     id: '@Model.Invoice.Id'
+                },
+                success: function (data) {
+                    if (data.Success) {
+                        // usuwanie z tabeli w html'u
+                        window.location = '@Url.Action("DownloadInvoicePdf", "Print")'
+                            + '?fileGuid' + data.FileGuid + '&fileName=' + data.FileName;
+                    }
+                    else {
+                        alert(data.Message + ' x');
+                    }
+                },
+                error: function (data) {
+                        alert(data.Message);
+                },
+                dataType: 'json',
+                cache: false
+
+                });
+            // --------------------------------------------
         }
 
         // Usuwanie pozycji faktury
