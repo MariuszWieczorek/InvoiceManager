@@ -126,9 +126,10 @@
                 },
                 success: function (data) {
                     if (data.Success) {
-                        // usuwanie z tabeli w html'u
+                        
                         window.location = '@Url.Action("DownloadInvoicePdf", "Print")'
-                            + '?fileGuid' + data.FileGuid + '&fileName=' + data.FileName;
+                            + '?fileGuid=' + data.FileGuid + '&fileName=' + data.FileName;
+                           
                     }
                     else {
                         alert(data.Message + ' x');

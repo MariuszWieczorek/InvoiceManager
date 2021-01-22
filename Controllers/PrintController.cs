@@ -30,8 +30,7 @@ namespace InvoiceManager.Controllers
             
             TempData[handle] = GetPdfContent(invoice);
 
-            System.IO.File.AppendAllText(@"d:\InvoiceToPdf.txt", $"{invoice.Title} {handle} \n ");
-            
+          
             return Json(new
             {
                 Success = true,
@@ -53,7 +52,6 @@ namespace InvoiceManager.Controllers
 
         public ActionResult DownloadInvoicePdf(string fileGuid, string fileName)
         {
-            System.IO.File.AppendAllText(@"d:\DownloadInvoicePdf.txt", $"{fileGuid} {fileName} \n ");
 
             if (TempData[fileGuid] == null)
                 throw new Exception("Błąd przy próbie eksportu faktury do PDF.");
