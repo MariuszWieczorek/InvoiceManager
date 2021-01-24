@@ -27,7 +27,6 @@ namespace InvoiceManager.Controllers
 
         public ActionResult Index()
         {
-
             var userId = User.Identity.GetUserId();
             var invoices = _invoiceRepository.GetInvoices(userId);
             return View(invoices);
@@ -203,6 +202,8 @@ namespace InvoiceManager.Controllers
         {
             number++;
             ViewBag.Message = "Your contact page." + number;
+
+            throw new Exception("nieznany błąd");
 
             return View();
         }

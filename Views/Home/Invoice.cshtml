@@ -21,14 +21,19 @@
             onclick="generatePdf()">
         Generuj PDF
     </button>
+
+    <button id="printButton" class="btn btn-secondary mb-3">
+        Drukuj
+    </button>
 }
+
 
 <div class="row">
     <div class="col-lg-6">
         @using (Html.BeginForm("Invoice", "Home"))
         {
             @Html.AntiForgeryToken()
-            
+
             <!-- Wyświetlenie podsumowania walidacji-->
             @Html.ValidationSummary()
 
@@ -115,6 +120,11 @@
 {
     <script type="text/javascript">
 
+           $("#printButton").click(function () {
+             window.open("@Url.Action("InvoiceTemplate", "Print",new {id = Model.Invoice.Id })", "_blank",
+            "menubar=no, toolbar=no, resizable=no, top=100, left=200, width=1000, height=800");
+            });
+
         // Generowanie PDF'a
         function generatePdf() {
 
@@ -129,10 +139,10 @@
                 },
                 success: function (data) {
                     if (data.Success) {
-                        
+
                         window.location = '@Url.Action("DownloadInvoicePdf", "Print")'
                             + '?fileGuid=' + data.FileGuid + '&fileName=' + data.FileName;
-                           
+
                     }
                     else {
                         alert(data.Message + ' x');
