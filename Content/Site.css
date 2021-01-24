@@ -19,4 +19,19 @@
 .field-validation-error {
     color: #ff3366;
 }
- 
+
+.privacyPoliceInfo{
+    font-size: 10px;
+    position: fixed;
+    bottom: 0;
+    background-color: #464646;
+    width: 100%;
+    color: lightblue;
+    text-align: center;
+    padding: 5px 0px;
+}
+
+.privacyPoliceBtn{
+    font-size: 12px; 
+}
+

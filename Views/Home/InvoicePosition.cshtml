@@ -9,6 +9,8 @@
 
 @using (Html.BeginForm("InvoicePosition", "Home"))
 {
+    @Html.AntiForgeryToken()
+     
     if (Model.InvoicePosition.Id == 0)
     {
         <p class="alert alert-info mb-4 mt-4">

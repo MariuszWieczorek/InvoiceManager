@@ -19,6 +19,12 @@ namespace InvoiceManager.Controllers
         private ClientRepository _clientRepository = new ClientRepository();
         private ProductRepository _productRepository = new ProductRepository();
 
+        [NonAction]
+        public int Testy()
+        {
+            return 1;
+        }
+
         public ActionResult Index()
         {
 
@@ -41,6 +47,7 @@ namespace InvoiceManager.Controllers
             return View(vm);
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Invoice(Invoice invoice)
         {
             var userId = User.Identity.GetUserId();
@@ -116,6 +123,7 @@ namespace InvoiceManager.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult InvoicePosition(InvoicePossition invoicePosition)
         {
             var userId = User.Identity.GetUserId();
@@ -188,20 +196,81 @@ namespace InvoiceManager.Controllers
 
         #endregion
 
-    
+        public static int number = 0; 
+        [AllowAnonymous]
+        [OutputCache(Duration = 10)]
+        public ActionResult Contact()
+        {
+            number++;
+            ViewBag.Message = "Your contact page." + number;
+
+            return View();
+        }
+
+
         [AllowAnonymous]
         public ActionResult About()
         {
             ViewBag.Message = "Your application description page.";
-            return View();
-        }
-        
-        [AllowAnonymous]
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
+
+            var valSession = GetSession();
+            valSession++;
+            UpdateSession(valSession);
+            ViewBag.ValSession = valSession;
+
+            var valCookie = GetCookie();
+            valCookie++;
+            UpdateCookie(valCookie);
+            ViewBag.ValCookie = valCookie;
+
+            var valCache = GetCache();
+            valCache++;
+            UpdateCache(valCache);
+            ViewBag.ValCache = valCache;
+
 
             return View();
         }
+
+        private void UpdateSession(int i)
+        {
+            Session["klucz"] = i;
+        }
+
+        private int GetSession()
+        {
+            if (Session["klucz"] != null)
+                return (int)Session["klucz"];
+            return 0;
+        }
+
+        private void UpdateCookie(int i)
+        {
+            var cookie = new HttpCookie("klucz",i.ToString());
+            cookie.Expires = DateTime.Now.AddDays(365);
+            Response.SetCookie(cookie);
+        }
+
+        private int GetCookie()
+        {
+            if (Request.Cookies["klucz"] != null)
+                return int.Parse(Request.Cookies["klucz"].Value);
+            return 0;
+        }
+
+
+        private void UpdateCache(int i)
+        {
+               HttpRuntime.Cache["klucz"] = i;
+        }
+
+        private int GetCache()
+        {
+            if (HttpRuntime.Cache["klucz"] != null)
+                return (int)HttpRuntime.Cache["klucz"];
+            return 0;
+        }
+
+
     }
 }
