@@ -13,7 +13,7 @@ namespace InvoiceManager.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "202101142143406_init"; }
+            get { return "202101312239487_init"; }
         }
         
         string IMigrationMetadata.Source

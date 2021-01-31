@@ -7,14 +7,10 @@
     {
         public override void Up()
         {
-            DropIndex("dbo.InvoicePossitions", new[] { "ProductID" });
-            CreateIndex("dbo.InvoicePossitions", "ProductId");
         }
         
         public override void Down()
         {
-            DropIndex("dbo.InvoicePossitions", new[] { "ProductId" });
-            CreateIndex("dbo.InvoicePossitions", "ProductID");
         }
     }
 }

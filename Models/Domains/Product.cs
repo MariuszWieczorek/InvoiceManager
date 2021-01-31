@@ -10,7 +10,6 @@ namespace InvoiceManager.Models.Domains
         {
             InvoicePossitions = new Collection<InvoicePossition>();
         }
-
         public int Id { get; set; }
         [Required]
         public string Name { get; set; }
