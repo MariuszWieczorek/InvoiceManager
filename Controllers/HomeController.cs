@@ -206,8 +206,6 @@ namespace InvoiceManager.Controllers
             number++;
             ViewBag.Message = "Your contact page." + number;
 
-            throw new Exception("nieznany błąd");
-
             return View();
         }
 
