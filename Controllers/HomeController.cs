@@ -109,6 +109,8 @@ namespace InvoiceManager.Controllers
         #endregion
 
         #region InvoicePossition
+
+        [HttpGet]
         public ActionResult InvoicePosition(int invoiceId = 0, int invoicePositionId = 0)
         {
             var userId = User.Identity.GetUserId();
@@ -149,6 +151,7 @@ namespace InvoiceManager.Controllers
             _invoiceRepository.UpdateInvoiceValue(invoicePosition.InvoiceId, userId);
 
             return RedirectToAction("Invoice", new { id = invoicePosition.InvoiceId });
+            
         }
 
         [HttpPost]
